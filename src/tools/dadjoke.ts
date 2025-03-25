@@ -7,6 +7,7 @@ import fetch from 'node-fetch'
 export const dadJokeToolDefinition = {
     name: 'dad_joke',
     parameters: z.object({}), // even if its empty its good practice to give something as a parameter
+    description: 'gets a dad joke',
 }
 
 // make a type by having zod infer it
