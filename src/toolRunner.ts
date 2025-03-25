@@ -22,7 +22,7 @@ export const runTool = async (
     // checks for tool call fcn name, and if matching does something
     switch (toolCall.function.name) {
         case 'get_weather':
-            return getWeather(input) //doesnt really care for the input lol
+            return getWeather() //doesnt really care for an input lol
         default:
             throw new Error(`Unknown tool: ${toolCall.function.name}`)
     }
