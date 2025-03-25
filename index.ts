@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { runAgent } from './src/agent'
-import { z } from 'zod'
+import { tools } from './src/tools'
 
 // you get the actual user message from 'npm start xxxxxx'
 const userMessage = process.argv[2]
@@ -11,16 +11,7 @@ if (!userMessage) {
   process.exit(1)
 }
 
-// hardcode a tool
-const weatherTool = {
-  name: 'get_weather',
-  description: 'use this to get the weather', // only add a couple of sentences otherwise it goes mad
-  parameters: z.object({
-    reasoning: z.string().describe('why did you pick this tool?'), // to get an idea why model chose what
-  })
-}
-
 // run the llm agent
-const response = runAgent({ userMessage, tools: [weatherTool] })
+const response = runAgent({ userMessage, tools})
 
 //console.log(response)
