@@ -1,9 +1,9 @@
 import type { AIMessage } from '../types'
 import { runLLM } from './llm'
 import { z } from 'zod'
-//import { runTool } from './toolRunner'
-import { addMessages, getMessages } from './memory'
+import { addMessages, getMessages, saveToolResponse } from './memory'
 import { logMessage, showLoader } from './ui'
+import { runTool } from './toolRunner'
 
 // create a fcn that runs an agent with a tool given a user convo history
 export const runAgent = async ({
@@ -33,16 +33,27 @@ export const runAgent = async ({
     tools,
   })
 
-  // log it so we can see it
+  // add the resulting msg to the history and log it
+  await addMessages([response])
+  logMessage(response)
+
+  // check if string or fcn came back
   if (response.tool_calls){
-    console.log(response.tool_calls)
+    // get the response, whether its a fcn or a string
+    const toolCall = response.tool_calls[0] // if many this gets for looped
+    loader.update(`executing: ${toolCall.function.name}`)
+
+    // actually run the tool
+    const toolResponse = await runTool(toolCall,userMessage)
+
+    // save the resulting msg to the history
+    await saveToolResponse(toolCall.id, toolResponse)
+    loader.update(`executed: ${toolCall.function.name}`)
+
   }
 
-  // add the resulting msg to the history
-  await addMessages([response])
-
-  // log msg and stop the loading animation
-  logMessage(response)
+  
+  // stop the loading animation
   loader.stop()
 
   // give back the response

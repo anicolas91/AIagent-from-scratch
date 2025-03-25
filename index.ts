@@ -13,7 +13,7 @@ if (!userMessage) {
 
 // hardcode a tool
 const weatherTool = {
-  name: 'get_stuff',
+  name: 'get_weather',
   description: 'use this to get the weather', // only add a couple of sentences otherwise it goes mad
   parameters: z.object({
     reasoning: z.string().describe('why did you pick this tool?'), // to get an idea why model chose what
@@ -23,4 +23,4 @@ const weatherTool = {
 // run the llm agent
 const response = runAgent({ userMessage, tools: [weatherTool] })
 
-console.log(response)
+//console.log(response)
